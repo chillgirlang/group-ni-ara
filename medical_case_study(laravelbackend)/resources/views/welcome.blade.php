@@ -2,7 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dental Medical Clinic</title>
+        <title>Medical Clinic</title>
     </head>
     <body>
         <header>
