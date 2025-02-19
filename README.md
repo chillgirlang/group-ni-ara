@@ -7,3 +7,7 @@ Step sa pag use ng git sa vscode:
 3. Pagkatapos mag sign in, punta kayo sa taas and then type nyo '>git: Clone': ![image](https://github.com/user-attachments/assets/f6db861b-1403-4d2c-9295-84f03e90ea11)
 4. And then input nyo to: https://github.com/stretchStress/group-ni-ara.git
 
+or https://www.youtube.com/watch?v=3Tsaxxv9sls follow this or this documentation for more -https://code.visualstudio.com/docs/sourcecontrol/overview
+
+
+
