@@ -2,7 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Medical Clinic</title>
+        <title>General Medical Clinic</title>
     </head>
     <body>
         <header>
@@ -11,8 +11,12 @@
         </header>
         
         <main>
-            <aside></aside>
-            <section></section>
+            <aside>
+
+            </aside>
+            <section>
+
+            </section>
         </main>
 
         <footer>
