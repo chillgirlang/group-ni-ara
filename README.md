@@ -10,4 +10,6 @@ Step sa pag use ng git sa vscode:
 or https://www.youtube.com/watch?v=3Tsaxxv9sls follow this or this documentation for more -https://code.visualstudio.com/docs/sourcecontrol/overview
 
 
+[Demo pagcommit ng changes]
+https://github.com/user-attachments/assets/01f55e0c-1c4b-4b90-8335-c0e5597a28ad
 
