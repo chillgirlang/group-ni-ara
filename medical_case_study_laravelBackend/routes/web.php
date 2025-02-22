@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Appointment Backend Route - Mindanao
+/* Appointment Backend Route - Mindanao 
 // Route for viewing all appointments
 Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
 
@@ -27,3 +29,13 @@ Route::put('/appointments/{id}', [AppointmentController::class, 'update'])->name
 
 // Route for deleting an appointment
 Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+*/
+
+/* Logout Backend Route - Mindanao
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/login')->with('status', 'Logged out successfully!');
+})->name('logout');
+*/
