@@ -1,4 +1,4 @@
-# SOAP System for Medical Clinic
+# Group 1 CCS112 - SOAP System for General Medical Clinic
 
 ## Table of Contents
 - [Case Study Overview](#case-study-overview)
