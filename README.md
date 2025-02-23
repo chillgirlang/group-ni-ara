@@ -1,12 +1,12 @@
 # SOAP System for Medical Clinic
 
 ## Table of Contents
-- [Project Overview](#project-overview)
+- [Case Study Overview](#case-study-overview)
 - [Features](#features)
 - [Scrum Methodology](#scrum-methodology)
 
-## Project Overview
-This project is a **web-based SOAP (Subjective, Objective, Assessment, Plan) system** designed for medical professionals to record and manage patient data effectively. The system is developed using **Scrum Agile methodology** and **Git for version control**.
+## Case Study Overview
+This case study is a **web-based SOAP (Subjective, Objective, Assessment, Plan) system** designed for medical professionals to record and manage patient data effectively. The system is developed using **Scrum Agile methodology** and **Git for version control**.
 
 ## Features
 - **Login&Logout:** Record patient symptoms and medical history.
