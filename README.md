@@ -12,13 +12,15 @@ This case study is a **web-based SOAP (Subjective, Objective, Assessment, Plan) 
 - **Login&Logout:** Record patient symptoms and medical history.
 - **Dashboard** Document measurable data from exams and tests.
   - **View All Patient Cases** Analyze data to form diagnoses.
+  - **View All SOAP Cases** Analyze data to form diagnoses.
+  - **View All Appointments** Analyze data to form diagnoses.
   - **Add New Patient** Outline treatment plans, including medications and follow-ups.
   - **Add New SOAP Case**
     -  [ Record of Patient symptoms and medical history ]
     -  [ Physical exam results and test findings ]
     -  [ Diagnosis and evaluation ]
     -  [Treatment and follow-up instructions ]
-  - **Appointments**
+  - **Add New Appointments**
 
 ## Scrum Methodology
 - **Roles:**
