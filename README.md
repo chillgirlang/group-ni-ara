@@ -16,7 +16,6 @@ This case study is a **web-based SOAP (Subjective, Objective, Assessment, Plan) 
   - **View All Appointments** Analyze data to form diagnoses.
   - **Add New Patient** Outline treatment plans, including medications and follow-ups.
   - **Add New SOAP Case**
-    -  [ Record of Patient symptoms and medical history ]
     -  [ Physical exam results and test findings ]
     -  [ Diagnosis and evaluation ]
     -  [Treatment and follow-up instructions ]
