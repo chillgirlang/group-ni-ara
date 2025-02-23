@@ -25,11 +25,11 @@ This project is a **web-based SOAP (Subjective, Objective, Assessment, Plan) sys
   - Product Owner: `Ceres, Ara Christina C. (arac880)`
   - Scrum Master: `Mindanao, Lawrence G. (stretchStress)`
   - Development Team:
-    `Antioquia, Carl Lawrence C. (CarlPogi0415)`
-    `Cabo, Patrick (tekiteks)`
-    `Dungo, Rose Bren A. (pebipebs)`
-    `Geraldez, Molly Sarah J. (chillgirlang)`
-    `Loberiano, Michelle J. (MichJL)`
-    `Panganiban, Jezimiel Gwen T (jeziiij)`
-    `Quiro, Joshua Cedric G. (chronozyx)`
+    `Antioquia, Carl Lawrence C. (CarlPogi0415)`,
+    `Cabo, Patrick (tekiteks)`,
+    `Dungo, Rose Bren A. (pebipebs)`,
+    `Geraldez, Molly Sarah J. (chillgirlang)`,
+    `Loberiano, Michelle J. (MichJL)`,
+    `Panganiban, Jezimiel Gwen T (jeziiij)`,
+    `Quiro, Joshua Cedric G. (chronozyx)`,
     `Rota, Axel Johannes B. (RotaAxel)`
