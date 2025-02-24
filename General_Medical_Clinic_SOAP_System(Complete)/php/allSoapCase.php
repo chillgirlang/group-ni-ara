@@ -1,5 +1,62 @@
 <?php
 include '../php/db-conn.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    header('Content-Type: application/json');
+
+    $patientNumber = trim($_POST['patient-number']);
+    $diagnosis = trim($_POST['diagnosis']);
+    $symptoms = trim($_POST['symptoms']);
+    $treatmentPlan = trim($_POST['treatment-plan']);
+    $caseStatus = $_POST['case-status'];
+    $admissionDate = $_POST['admission-date'];
+    $dischargeDate = !empty($_POST['discharge-date']) ? $_POST['discharge-date'] : null;
+
+    // generate a unique Case Number
+    $caseNumber = uniqid('CASE-');
+
+    // required fields
+    if (empty($patientNumber) || empty($diagnosis) || empty($symptoms) || empty($caseStatus) || empty($admissionDate)) {
+        echo json_encode(["status" => "error", "message" => "All required fields must be filled."]);
+        exit();
+    }
+
+    // validate Patient exists
+    $checkPatientQuery = "SELECT Patient_Number FROM Patients WHERE Patient_Number = ?";
+    $checkStmt = $conn->prepare($checkPatientQuery);
+    $checkStmt->bind_param("s", $patientNumber);
+    $checkStmt->execute();
+    $result = $checkStmt->get_result();
+
+    if ($result->num_rows == 0) {
+        echo json_encode(["status" => "error", "message" => "Patient not found."]);
+        exit();
+    }
+    $checkStmt->close();
+
+    // prevemt future discharge dates for closed cases
+    if ($caseStatus === "Closed" && empty($dischargeDate)) {
+        echo json_encode(["status" => "error", "message" => "Discharge Date is required for closed cases."]);
+        exit();
+    }
+
+    // insert SOAP Case
+    $sql = "INSERT INTO Patient_Cases (Case_Number, Patient_Number, Diagnosis, Symptoms, Treatment_Plan, Case_Status, Admission_Date, Discharge_Date) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssss", $caseNumber, $patientNumber, $diagnosis, $symptoms, $treatmentPlan, $caseStatus, $admissionDate, $dischargeDate);
+
+    if ($stmt->execute()) {
+        echo json_encode(["status" => "success", "message" => "SOAP case added successfully."]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error: " . $stmt->error]);
+    }
+
+    $stmt->close();
+    $conn->close();
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -7,60 +64,75 @@ include '../php/db-conn.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOAP General Medical Clinic - All SOAP Cases</title>
-    <link rel="stylesheet" href="../CSS/allStyles.css">
+    <title>SOAP General Medical Clinic - Add SOAP Case</title>
+    <link rel="stylesheet" href="../CSS/addSoapCase.css">
 </head>
 <body>
     <div class="container">
-        <h2>All SOAP Cases</h2>
-        <button class="back-btn" onclick="goBack()">Go Back</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Case Number</th>
-                    <th>Patient Number</th>
-                    <th>Diagnosis</th>
-                    <th>Symptoms</th>
-                    <th>Treatment Plan</th>
-                    <th>Status</th>
-                    <th>Admission Date</th>
-                    <th>Discharge Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $query = "SELECT * FROM Patient_Cases";
-                $result = $conn->query($query);
+        <h2>Add SOAP Case</h2>
+        <p>Fill in the information below to add a SOAP case.</p>
+        <form id="soapCaseForm">
+            <label for="patient-number">Patient Number:</label>
+            <input type="text" id="patient-number" name="patient-number" placeholder="Enter Patient Number" required>
 
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>
-                                <td>{$row['Case_Number']}</td>
-                                <td>{$row['Patient_Number']}</td>
-                                <td>{$row['Diagnosis']}</td>
-                                <td>{$row['Symptoms']}</td>
-                                <td>{$row['Treatment_Plan']}</td>
-                                <td>{$row['Case_Status']}</td>
-                                <td>{$row['Admission_Date']}</td>
-                                <td>{$row['Discharge_Date']}</td>
-                              </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='8'>No SOAP cases found.</td></tr>";
-                }
-                $conn->close();
-                ?>
-            </tbody>
-        </table>
+            <label for="diagnosis">Diagnosis:</label>
+            <textarea id="diagnosis" name="diagnosis" placeholder="Enter Diagnosis" required></textarea>
+
+            <label for="symptoms">Symptoms:</label>
+            <textarea id="symptoms" name="symptoms" placeholder="Enter Symptoms" required></textarea>
+
+            <label for="treatment-plan">Treatment Plan:</label>
+            <textarea id="treatment-plan" name="treatment-plan" placeholder="Enter Treatment Plan"></textarea>
+
+            <label for="case-status">Case Status:</label>
+            <select id="case-status" name="case-status" required onchange="toggleDischargeDate()">
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+            </select>
+
+            <label for="admission-date">Admission Date:</label>
+            <input type="date" id="admission-date" name="admission-date" required>
+
+            <label for="discharge-date">Discharge Date:</label>
+            <input type="date" id="discharge-date" name="discharge-date" disabled>
+
+            <div class="buttons">
+                <button type="button" class="cancel" onclick="goback()">CANCEL</button>
+                <button type="submit" class="submit">SUBMIT</button>
+            </div>
+        </form>
     </div>
 
     <script>
-    function goBack() {
-        if (document.referrer) {
+    document.getElementById("soapCaseForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let formData = new FormData(this);
+
+        fetch("addsoapcase.php", {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.status === "success") {
+                document.getElementById("soapCaseForm").reset();
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+
+    function toggleDischargeDate() {
+        let caseStatus = document.getElementById("case-status").value;
+        let dischargeDate = document.getElementById("discharge-date");
+        dischargeDate.disabled = (caseStatus !== "Closed");
+        if (dischargeDate.disabled) dischargeDate.value = "";
+    }
+
+    function goback() {
         window.history.back();
-        } else {
-            window.location.href = "index.php"; 
-        }
     }
     </script>
 </body>
