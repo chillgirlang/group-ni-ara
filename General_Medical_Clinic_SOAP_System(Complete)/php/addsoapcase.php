@@ -1,3 +1,64 @@
+<?php
+include '../php/db-conn.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    header('Content-Type: application/json');
+
+    $patientNumber = trim($_POST['patient-number']);
+    $diagnosis = trim($_POST['diagnosis']);
+    $symptoms = trim($_POST['symptoms']);
+    $treatmentPlan = trim($_POST['treatment-plan']);
+    $caseStatus = $_POST['case-status'];
+    $admissionDate = $_POST['admission-date'];
+    $dischargeDate = !empty($_POST['discharge-date']) ? $_POST['discharge-date'] : null;
+
+    // generate a unique Case Number
+    $caseNumber = uniqid('CASE-');
+
+    // required fields
+    if (empty($patientNumber) || empty($diagnosis) || empty($symptoms) || empty($caseStatus) || empty($admissionDate)) {
+        echo json_encode(["status" => "error", "message" => "All required fields must be filled."]);
+        exit();
+    }
+
+    // validate Patient exists
+    $checkPatientQuery = "SELECT Patient_Number FROM Patients WHERE Patient_Number = ?";
+    $checkStmt = $conn->prepare($checkPatientQuery);
+    $checkStmt->bind_param("s", $patientNumber);
+    $checkStmt->execute();
+    $result = $checkStmt->get_result();
+
+    if ($result->num_rows == 0) {
+        echo json_encode(["status" => "error", "message" => "Patient not found."]);
+        exit();
+    }
+    $checkStmt->close();
+
+    // prevemt future discharge dates for closed cases
+    if ($caseStatus === "Closed" && empty($dischargeDate)) {
+        echo json_encode(["status" => "error", "message" => "Discharge Date is required for closed cases."]);
+        exit();
+    }
+
+    // insert SOAP Case
+    $sql = "INSERT INTO Patient_Cases (Case_Number, Patient_Number, Diagnosis, Symptoms, Treatment_Plan, Case_Status, Admission_Date, Discharge_Date) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssss", $caseNumber, $patientNumber, $diagnosis, $symptoms, $treatmentPlan, $caseStatus, $admissionDate, $dischargeDate);
+
+    if ($stmt->execute()) {
+        echo json_encode(["status" => "success", "message" => "SOAP case added successfully."]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error: " . $stmt->error]);
+    }
+
+    $stmt->close();
+    $conn->close();
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,4 +137,3 @@
     </script>
 </body>
 </html>
-
